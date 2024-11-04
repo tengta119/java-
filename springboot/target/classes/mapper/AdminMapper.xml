@@ -28,4 +28,11 @@
         </trim>
     </insert>
 
+    <select id="selectAll" resultType="com.example.entity.Admin">
+        select * from `admin`
+        <where>
+            <if test="name != null"> and name like concat('%', #{name}, '%')</if>
+        </where>
+    </select>
+
 </mapper>
