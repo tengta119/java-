@@ -18,6 +18,8 @@ const router = createRouter({
         {path: 'home', component: () => import('@/views/front/Home.vue')},
       ]
     },
+    {path: '/login', component: () => import('@/views/Login.vue')},
+    {path: '/register', component: () => import('@/views/Register.vue')},
     {path:'/404', component: () => import('@/views/404.vue')},
     {path: '/:pathMatch(.*)', redirect: '/404'}
   ]

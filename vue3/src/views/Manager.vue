@@ -19,14 +19,14 @@
       <div class="manager-header-right">
         <el-dropdown style="cursor: pointer">
           <div style="padding-right: 20px; display: flex; align-items: center">
-            <img style="width: 40px; height: 40px; border-radius: 50%; "  src="@/assets/imgs/logo.png">
-            <span style="margin-left: 5px; color: white">用户</span>
+            <img style="width: 40px; height: 40px; border-radius: 50%; "  :src="data.user.avatar">
+            <span style="margin-left: 5px; color: white">{{ data.user.name }}</span>
           </div>
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item>个人资料</el-dropdown-item>
               <el-dropdown-item>修改密码</el-dropdown-item>
-              <el-dropdown-item>退出登录</el-dropdown-item>
+              <el-dropdown-item @click="logout">退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -72,6 +72,23 @@
 
 import {HomeFilled, Location, Menu, Setting} from "@element-plus/icons-vue";
 import router from "@/router/index.js";
+import { reactive } from "vue";
+import {ElMessage} from "element-plus";
+
+const data = reactive({
+  user: JSON.parse(localStorage.getItem('xm-user') || '{}')
+})
+
+const logout = () => {
+  localStorage.removeItem('xm-user')
+  router.push('/login')
+}
+
+if (!data.user.id) {
+  logout()
+  ElMessage.error("请登录")
+}
+
 </script>
 
 <style scoped>

@@ -4,6 +4,7 @@ import cn.hutool.core.util.ObjectUtil;
 import com.example.common.Constants;
 import com.example.common.enums.ResultCodeEnum;
 import com.example.common.enums.RoleEnum;
+import com.example.entity.Account;
 import com.example.entity.Admin;
 import com.example.exception.CustomException;
 import com.example.mapper.AdminMapper;
@@ -55,5 +56,18 @@ public class AdminService {
         for (Integer id : ids) {
             deleteById(id);
         }
+    }
+
+    //登录
+    public Admin login(Account account) {
+        Admin admin = adminMapper.selectByUsername(account.getUsername());
+        if (ObjectUtil.isNull(admin)) {
+            throw new CustomException(ResultCodeEnum.USER_NOT_EXIST_ERROR);
+        }
+        if (!admin.getPassword().equals(account.getPassword())) {
+            throw new CustomException(ResultCodeEnum.USER_ACCOUNT_ERROR);
+        }
+        //TODO 生成token
+        return admin;
     }
 }

@@ -9,9 +9,5 @@
 </template>
 
 <script setup lang="ts">
-  import  request  from "@/utils/request.js";
 
-  request.get('/test/hello').then(res => {
-    console.log(res)
-  })
 </script>
