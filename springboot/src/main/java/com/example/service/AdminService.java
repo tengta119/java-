@@ -42,4 +42,18 @@ public class AdminService {
         List<Admin> list =  adminMapper.selectAll(admin);
         return PageInfo.of(list);
     }
+
+    public void updateById(Admin admin) {
+        adminMapper.updateById(admin);
+    }
+
+    public void deleteById(Integer id) {
+        adminMapper.deleteById(id);
+    }
+
+    public void deleteBatch(List<Integer> ids) {
+        for (Integer id : ids) {
+            deleteById(id);
+        }
+    }
 }

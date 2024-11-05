@@ -15,4 +15,8 @@ public interface AdminMapper {
     Admin selectByUsername(String username);
 
     List<Admin> selectAll(Admin admin);
+
+    void updateById(Admin admin);
+
+    void deleteById(Integer id);
 }

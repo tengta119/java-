@@ -10,11 +10,12 @@
       </div>
       <div class="card" style="margin-bottom: 5px">
         <el-button type="primary" plain @click="handleAdd">新增</el-button>
-
+        <el-button type="danger" plain @click="delBatch">批量删除</el-button>
       </div>
 
       <div class="card" style="margin-bottom: 5px">
-        <el-table stripe :data="data.tableDate">
+        <el-table stripe :data="data.tableDate" @selection-change="handleSelectChange">
+          <el-table-column type="selection" width="55"></el-table-column>
           <el-table-column prop="username" label="账号"></el-table-column>
           <el-table-column prop="name" label="名称"></el-table-column>
           <el-table-column prop="avatar" label="头像"></el-table-column>
@@ -66,7 +67,7 @@
 <script setup lang="ts">
 import { reactive } from 'vue'
 import  request  from "@/utils/request.js";
-import {ElMessage} from "element-plus";
+import {ElMessage, ElMessageBox} from "element-plus";
 import {Delete, Edit} from "@element-plus/icons-vue";
 
 const data = reactive({
@@ -74,14 +75,20 @@ const data = reactive({
   form: {},
   tableDate: [],
   pageNum: 1,
-  pageSize: 2,
+  pageSize: 4,
   total: 0,
   name: null,
+  ids: [],
 })
 
 const handleAdd = () => {
     data.form = {}
     data.formVisible = true
+}
+
+const handleEdit = (row) => {
+  data.form = JSON.parse(JSON.stringify(row))
+  data.formVisible = true
 }
 
 const load = () => {
@@ -116,8 +123,60 @@ const reset = () => {
   load()
 }
 
+const update = () => {
+  request.put('/admin/update', data.form).then(res => {
+    if (res.code === '200') {
+      ElMessage.success('操作成功')
+      data.formVisible = false
+      load()
+    } else {
+      ElMessage.error(res.message)
+    }
+  })
+}
+
 const save = () => {
-  add()
+  data.form.id ? update() : add()
+}
+
+const del = (id) => {
+  ElMessageBox.confirm('此操作将永久删除该数据, 是否继续?', '删除确认', { type: 'warning'}).then(res => {
+    request.delete('/admin/delete/' + id ).then(res => {
+      if (res.code === '200') {
+        ElMessage.success('删除成功')
+        load()
+      } else {
+        ElMessage.error(res.message)
+      }
+    })
+  }).catch(err => {
+    console.error(err)
+  })
+
+}
+
+const handleSelectChange = (rows) => {
+  data.ids = rows.map(v => v.id)
+  console.log(data.ids)
+}
+
+const delBatch = () => {
+  if (data.ids.length === 0) {
+    ElMessage.warning('请选择要删除的数据')
+    return
+  }
+  ElMessageBox.confirm('此操作将永久删除该数据, 是否继续?', '删除确认', { type: 'warning'}).then(res => {
+    request.delete('/admin/delete/batch', {data: data.ids}).then(res => {
+      if (res.code === '200') {
+        ElMessage.success('删除成功')
+        load()
+      } else {
+        ElMessage.error(res.message)
+      }
+    })
+  }).catch(err => {
+    console.error(err)
+  })
 }
 
 load()

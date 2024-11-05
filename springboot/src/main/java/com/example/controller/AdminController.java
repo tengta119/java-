@@ -7,6 +7,8 @@ import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/admin")
 public class AdminController {
@@ -26,6 +28,24 @@ public class AdminController {
                              @RequestParam(defaultValue = "10") Integer pageSize) {
         PageInfo<Admin> pageInfo =  adminService.selcetPage(admin, pageNum, pageSize);
         return Result.success(pageInfo);
+    }
+
+    @PutMapping("/update")
+    public Result update(@RequestBody Admin admin) {
+        adminService.updateById(admin);
+        return Result.success();
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public Result delete(@PathVariable Integer id) {
+        adminService.deleteById(id);
+        return Result.success();
+    }
+
+    @DeleteMapping("/delete/batch")
+    public Result deleteBatch(@RequestBody List<Integer> ids) {
+        adminService.deleteBatch(ids);
+        return Result.success();
     }
 
 }
