@@ -18,7 +18,12 @@
           <el-table-column type="selection" width="55"></el-table-column>
           <el-table-column prop="username" label="账号"></el-table-column>
           <el-table-column prop="name" label="名称"></el-table-column>
-          <el-table-column prop="avatar" label="头像"></el-table-column>
+          <el-table-column prop="avatar" label="头像">
+            <template v-slot="scope">
+              <el-image style="width: 40px; height: 40px; border-radius: 50%; display: block" v-if="scope.row.avatar"
+                        :src="scope.row.avatar" :preview-src-list="[scope.row.avatar]" preview-teleported></el-image>
+            </template>
+          </el-table-column>
           <el-table-column prop="role" label="角色"></el-table-column>
           <el-table-column prop="phone" label="电话"></el-table-column>
           <el-table-column prop="email" label="邮箱"></el-table-column>
@@ -41,7 +46,9 @@
             <el-input v-model="data.form.username" placeholder="请输入用户名"></el-input>
           </el-form-item>
           <el-form-item prop="avatar" label="头像">
-            <el-input v-model="data.form.avatar" placeholder="请输入头像"></el-input>
+            <el-upload :action="baseUrl + '/files/upload'" :on-success="handleFileUpload" list-type="picture">
+              <el-button type="primary">点击上传</el-button>
+            </el-upload>
           </el-form-item>
           <el-form-item prop="name" label="姓名">
             <el-input v-model="data.form.name" placeholder="请输入姓名"></el-input>
@@ -69,6 +76,8 @@ import { reactive } from 'vue'
 import  request  from "@/utils/request.js";
 import {ElMessage, ElMessageBox} from "element-plus";
 import {Delete, Edit} from "@element-plus/icons-vue";
+
+const baseUrl = 'http://localhost:9090'
 
 const data = reactive({
   formVisible: false,
@@ -177,6 +186,10 @@ const delBatch = () => {
   }).catch(err => {
     console.error(err)
   })
+}
+
+const handleFileUpload = (res) =>  {
+  data.form.avatar = res.data
 }
 
 load()
