@@ -84,10 +84,10 @@ const logout = () => {
   router.push('/login')
 }
 
-if (!data.user.id) {
-  logout()
-  ElMessage.error("请登录")
-}
+// if (!data.user.id) {
+//   logout()
+//   ElMessage.error("请登录")
+// }
 
 </script>
 

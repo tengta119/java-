@@ -1,5 +1,6 @@
 import axios from "axios";
 import {ElMessage} from "element-plus";
+import router from "@/router/index.js";
 
 const request = axios.create({
     baseURL: 'http://localhost:9090',  // 后台接口地址
@@ -10,6 +11,8 @@ const request = axios.create({
 // 可以自请求发送前对请求做一些处理
 request.interceptors.request.use(config => {
     config.headers['Content-Type'] = 'application/json;charset=utf-8';
+    let user =  JSON.parse(localStorage.getItem("xm-user") || '{}')
+    config.headers['token'] = user.token || '';
     return config
 }, error => {
     return Promise.reject(error)
@@ -23,6 +26,11 @@ request.interceptors.response.use(
         // 如果是返回的文件
         if (response.config.responseType === 'blob') {
             return res
+        }
+        // 当权限验证不通过时给出提示
+        if (res.code === 401) {
+            ElMessage.error(res.message)
+            router.push("/login")
         }
         // 兼容服务端返回的字符串数据
         if (typeof res === 'string') {

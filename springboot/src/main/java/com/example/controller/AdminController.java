@@ -30,6 +30,18 @@ public class AdminController {
         return Result.success(pageInfo);
     }
 
+    @GetMapping("/selectBy/{id}")
+    public Result selectById(@PathVariable Integer id) {
+        Admin admin = adminService.selectById(id);
+        return Result.success(admin);
+    }
+
+    @GetMapping("/selectAll")
+    public Result selectAll(Admin admin) {
+        List<Admin> list = adminService.selectAll(admin);
+        return Result.success(list);
+    }
+
     @PutMapping("/update")
     public Result update(@RequestBody Admin admin) {
         adminService.updateById(admin);

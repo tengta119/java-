@@ -1,13 +1,13 @@
 package com.example.service;
 
 import cn.hutool.core.util.ObjectUtil;
-import com.example.common.Constants;
 import com.example.common.enums.ResultCodeEnum;
 import com.example.common.enums.RoleEnum;
 import com.example.entity.Account;
 import com.example.entity.Admin;
 import com.example.exception.CustomException;
 import com.example.mapper.AdminMapper;
+import com.example.utils.TokenUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +44,14 @@ public class AdminService {
         return PageInfo.of(list);
     }
 
+    public List<Admin> selectAll(Admin admin) {
+        return adminMapper.selectAll(admin);
+    }
+
+    public Admin selectById(Integer id) {
+        return adminMapper.selectById(id);
+    }
+
     public void updateById(Admin admin) {
         adminMapper.updateById(admin);
     }
@@ -67,7 +75,9 @@ public class AdminService {
         if (!admin.getPassword().equals(account.getPassword())) {
             throw new CustomException(ResultCodeEnum.USER_ACCOUNT_ERROR);
         }
-        //TODO 生成token
+        //生成token
+        String token = TokenUtils.createToken(admin.getId() + "-" + admin.getRole(), admin.getPassword());
+        admin.setToken(token);
         return admin;
     }
 }
