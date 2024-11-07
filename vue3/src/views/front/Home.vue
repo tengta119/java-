@@ -6,7 +6,7 @@ export default {
 
 <template>
   <div class="main-container">
-
+    这是首页
   </div>
 </template>
 

@@ -33,4 +33,11 @@ public class WebController {
         return Result.success();
     }
 
+    @PostMapping("/updatePassword")
+    public Result updatePassword(@RequestBody Account account) {
+        if (RoleEnum.ADMIN.name().equals(account.getRole())) {
+            adminService.updatePassword(account);
+        }
+        return Result.success();
+    }
 }

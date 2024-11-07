@@ -52,3 +52,11 @@
     width: 80%;
     margin: 5px auto;
 }
+
+.front-notice {
+    padding: 5px 20px;
+    color: #666;
+    font-size: 12px;
+    display: flex;
+    align-items: center;
+}

@@ -24,8 +24,8 @@
           </div>
           <template #dropdown>
             <el-dropdown-menu>
-              <el-dropdown-item>个人资料</el-dropdown-item>
-              <el-dropdown-item>修改密码</el-dropdown-item>
+              <el-dropdown-item @click="router.push('/manager/person')">个人资料</el-dropdown-item>
+              <el-dropdown-item @click="router.push('/manager/password')">修改密码</el-dropdown-item>
               <el-dropdown-item @click="logout">退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </template>
@@ -48,6 +48,7 @@
               <el-icon><Menu/></el-icon>
               <span>信息管理</span>
             </template>
+            <el-menu-item index="/manager/notice">系统公告</el-menu-item>
           </el-sub-menu>
           <el-sub-menu index="2">
             <template #title>
@@ -59,7 +60,7 @@
         </el-menu>
       </div>
       <div class="manager-main-right">
-        <RouterView/>
+        <RouterView @updateUser="updateUser"/>
       </div>
 
     </div>
@@ -69,6 +70,10 @@
 </template>
 
 <script setup>
+
+const updateUser = () => {
+  data.user = JSON.parse(localStorage.getItem('xm-user') || '{}')
+}
 
 import {HomeFilled, Location, Menu, Setting} from "@element-plus/icons-vue";
 import router from "@/router/index.js";
@@ -84,10 +89,11 @@ const logout = () => {
   router.push('/login')
 }
 
-// if (!data.user.id) {
-//   logout()
-//   ElMessage.error("请登录")
-// }
+if (!data.user.id) {
+  logout()
+  ElMessage.error("请登录")
+}
+
 
 </script>
 
